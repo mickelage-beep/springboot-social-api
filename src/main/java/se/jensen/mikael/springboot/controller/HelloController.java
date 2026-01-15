@@ -20,7 +20,7 @@ public class HelloController {
      */
     @GetMapping
     public String hello() {
-        return "Hello from Spring Boot"; // Returnerar text direkt som response body
+        return "Hello from Spring Boot, hello"; // Returnerar text direkt som response body
     }
 
     /*
