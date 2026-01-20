@@ -12,6 +12,7 @@ import se.jensen.mikael.springboot.mapper.PostMapper;
 import se.jensen.mikael.springboot.model.Post;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /*
@@ -70,6 +71,9 @@ public class PostController {
 
         // Konvertera alla Post → PostResponseDTO
         List<PostResponseDTO> result = posts.stream()
+                .sorted(
+                        Comparator.comparing(Post::getCreatedAt).reversed()
+                )
                 .map(p -> new PostResponseDTO(
                         (long) posts.indexOf(p), // Skapar ett id baserat på index i listan
                         p.getText(),
