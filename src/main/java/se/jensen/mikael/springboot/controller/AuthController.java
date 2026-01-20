@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.jensen.mikael.springboot.dto.LoginRequestDTO;
 import se.jensen.mikael.springboot.dto.LoginResponseDTO;
+import se.jensen.mikael.springboot.security.MyUserDetails;
 import se.jensen.mikael.springboot.service.TokenService;
 
 @RestController
@@ -27,16 +28,20 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<LoginResponseDTO> token(
-            @RequestBody LoginRequestDTO dto) {
+            @RequestBody LoginRequestDTO loginRequest) {
 
-        Authentication auth =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                dto.username(), dto.password()));
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.username(),
+                        loginRequest.password()
+                )
+        );
+        MyUserDetails details = (MyUserDetails) auth.getPrincipal();
+
 
         String token = tokenService.generateToken(auth);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(new LoginResponseDTO(token, details.getDomainUser().getId()));
     }
 }
 
