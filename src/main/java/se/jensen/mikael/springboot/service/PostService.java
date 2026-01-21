@@ -1,5 +1,7 @@
 package se.jensen.mikael.springboot.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.jensen.mikael.springboot.dto.PostRequestDTO;
 import se.jensen.mikael.springboot.dto.PostResponseDTO;
@@ -14,6 +16,10 @@ import java.util.NoSuchElementException;
 
 @Service
 public class PostService {
+
+    // Logger
+    private static final Logger logger =
+            LoggerFactory.getLogger(PostService.class);
 
     // ----------------------------
     // Repositories för databasen
@@ -44,15 +50,22 @@ public class PostService {
         post.setCreatedAt(LocalDateTime.now());
 
         // Hämta användare från databasen baserat på userId
-        // Om användaren inte finns kastas ett NoSuchElementException
+        // Om användaren inte finns kastas ett NoSuchElementException & loggar det med logger.
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + userId));
+                .orElseThrow(() -> {
+                    logger.warn("User not found with id: " + userId);
+                    return new NoSuchElementException("User not found with id: " + userId);
+                });
+
 
         // Koppla posten till användaren
         post.setUser(user);
 
         // Spara posten i databasen via repository
         Post savedPost = postRepository.save(post);
+
+        // Logga att posten skapas
+        logger.info("Post created with id: " + savedPost.getId());
 
         // Returnera en PostResponseDTO som ska skickas tillbaka till klienten
         return new PostResponseDTO(
