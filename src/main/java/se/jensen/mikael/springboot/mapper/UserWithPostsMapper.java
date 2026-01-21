@@ -10,15 +10,25 @@ import java.util.List;
 
 @Component
 public class UserWithPostsMapper {
+    //inject UserMapper
+    private final UserMapper userMapper;
+
+    public UserWithPostsMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
     public UserWithPostsResponseDTO toDto(User user) {
 
+
         //Mappa posts till PostResponceDTO
+        //PostResponseDTO behöver userMapper
         List<PostResponseDTO> posts = user.getPosts()
                 .stream()
                 .map(p -> new PostResponseDTO(
                         p.getId(),
                         p.getText(),
-                        p.getCreatedAt()
+                        p.getCreatedAt(),
+                        userMapper.toDto(p.getUser()) // Mappa User till UserResponseDTO
                 ))
                 .toList();
 

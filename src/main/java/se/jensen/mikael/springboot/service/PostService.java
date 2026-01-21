@@ -3,6 +3,7 @@ package se.jensen.mikael.springboot.service;
 import org.springframework.stereotype.Service;
 import se.jensen.mikael.springboot.dto.PostRequestDTO;
 import se.jensen.mikael.springboot.dto.PostResponseDTO;
+import se.jensen.mikael.springboot.mapper.UserMapper;
 import se.jensen.mikael.springboot.model.Post;
 import se.jensen.mikael.springboot.model.User;
 import se.jensen.mikael.springboot.repository.PostRepository;
@@ -19,11 +20,13 @@ public class PostService {
     // ----------------------------
     private final UserRepository userRepository; // Används för att hämta User som posten ska kopplas till
     private final PostRepository postRepository; // Används för att spara och hämta Post-objekt
+    private final UserMapper userMapper;         // används för att mappar User till UserDTO
 
     // Konstruktor med DI (Dependency Injection)
     public PostService(UserRepository userRepository, PostRepository postRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.userMapper = new UserMapper();
     }
 
     // ----------------------------
@@ -55,7 +58,8 @@ public class PostService {
         return new PostResponseDTO(
                 savedPost.getId(),
                 savedPost.getText(),
-                savedPost.getCreatedAt()
+                savedPost.getCreatedAt(),
+                userMapper.toDto(savedPost.getUser())
         );
     }
 }
