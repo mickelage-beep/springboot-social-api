@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public record PostResponseDTO(
         Long id,              // Unikt ID för posten (från databasen)
         String text,          // Textinnehållet i posten
-        LocalDateTime createdAt // Tidpunkt då posten skapades
+        LocalDateTime createdAt, // Tidpunkt då posten skapades
+        UserResponseDTO user     // användare som skapade posten
 ) {
 }
