@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import se.jensen.mikael.springboot.dto.PostRequestDTO;
 import se.jensen.mikael.springboot.dto.PostResponseDTO;
 import se.jensen.mikael.springboot.mapper.PostMapper;
+import se.jensen.mikael.springboot.mapper.UserMapper;
 import se.jensen.mikael.springboot.model.Post;
+import se.jensen.mikael.springboot.repository.PostRepository;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /*
  * PostController
@@ -30,14 +33,17 @@ public class PostController {
      * Vi använder tidigare List<String> men nu med Post-modellen.
      */
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
-
-    private List<Post> posts = new ArrayList<>();
+    //ändrat till repo istället för new list
+    private final PostRepository postRepository;
 
     private final PostMapper postMapper; // Mapper injiceras via DI
+    private final UserMapper userMapper;
 
     // Konstruktor som tar emot mappern. Spring sköter instansiering automatiskt
-    public PostController(PostMapper postMapper) {
+    public PostController(PostMapper postMapper, PostRepository postRepository, UserMapper userMapper) {
         this.postMapper = postMapper;
+        this.postRepository = postRepository;
+        this.userMapper = userMapper;
     }
 
     // -------------------------------------------------------------------
@@ -51,11 +57,11 @@ public class PostController {
 
         // Skapa nytt Post-objekt via mapper
         Post post = postMapper.toPost(dto);
-
-        posts.add(post); // Lägg in i listan ("databasen")
+        // ändrar så den går mot postDTO
+        Post savedPost = postRepository.save(post); // Sparar till databasen
 
         // Skapa response-DTO också via mapper
-        PostResponseDTO response = postMapper.toResponseDTO(post);
+        PostResponseDTO response = postMapper.toResponseDTO(savedPost);
 
         log.debug("Post skapad med id {}", post.getId()); // debug-logg
 
@@ -67,13 +73,17 @@ public class PostController {
     // -------------------------------------------------------------------
     @GetMapping
     public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
-
+        List<Post> posts = postRepository.findAll();
         // Konvertera alla Post → PostResponseDTO
         List<PostResponseDTO> result = posts.stream()
+                .sorted(
+                        Comparator.comparing(Post::getCreatedAt).reversed()
+                )
                 .map(p -> new PostResponseDTO(
-                        (long) posts.indexOf(p), // Skapar ett id baserat på index i listan
+                        p.getId(), // Skapar ett id baserat på index i listan // tog bort den så att den går direkt på ID
                         p.getText(),
-                        p.getCreatedAt()
+                        p.getCreatedAt(),
+                        userMapper.toDto(p.getUser())
                 ))
                 .toList();
 
@@ -83,18 +93,19 @@ public class PostController {
     // -------------------------------------------------------------------
     // GET – hämta post på index (id)
     // -------------------------------------------------------------------
-    @GetMapping("/{index}")
-    public ResponseEntity<PostResponseDTO> getPost(@PathVariable int index) {
-        log.info("Hämtar post med index {}", index);
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponseDTO> getPost(@PathVariable Long id) {
+        log.info("Hämtar post med id {}", id);
+        //använder optional för att säkert kolla om post finns för att undvika nullpointerexception
+        Optional<Post> postOptional = postRepository.findById(id);
 
-        if (index < 0 || index >= posts.size()) {
-            log.warn("Felaktigt index: {}", index); // varning logg
+        if (postOptional.isEmpty()) {
+            log.warn("Post med id {} hittades inte", id);
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
 
-        Post p = posts.get(index);
-
-        PostResponseDTO response = postMapper.toResponseDTO(posts.get(index));
+        Post post = postOptional.get();
+        PostResponseDTO response = postMapper.toResponseDTO(post);
         log.debug("Returnerar post: {}", response);
 
         return ResponseEntity.ok(response); // 200 OK
@@ -105,21 +116,25 @@ public class PostController {
     // -------------------------------------------------------------------
     @PutMapping("/{index}")
     public ResponseEntity<PostResponseDTO> updatePost(
-            @PathVariable int index,
+            @PathVariable Long id,
             @Valid @RequestBody PostRequestDTO dto
     ) {
-        if (index < 0 || index >= posts.size()) {
+        //använder optional för att säkert kolla om post finns för att undvika nullpointerexception
+        Optional<Post> postOptional = postRepository.findById(id);
+
+        if (postOptional.isEmpty()) {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
 
-        Post post = posts.get(index);
+
+        Post post = postOptional.get();
 
         // Uppdatera text (validering sker via DTO)
         post.setText(dto.text());
 
         // createdAt ändras inte
-
-        PostResponseDTO response = postMapper.toResponseDTO(posts.get(index));
+        Post updatedPost = postRepository.save(post); // Spara uppdateringen
+        PostResponseDTO response = postMapper.toResponseDTO(updatedPost);
 
         return ResponseEntity.ok(response); // 200 OK
     }
@@ -127,14 +142,14 @@ public class PostController {
     // -------------------------------------------------------------------
     // DELETE – ta bort post
     // -------------------------------------------------------------------
-    @DeleteMapping("/{index}")
-    public ResponseEntity<Void> deletePost(@PathVariable int index) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
 
-        if (index < 0 || index >= posts.size()) {
+        if (!postRepository.existsById(id)) {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
 
-        posts.remove(index); // Ta bort post från listan
+        postRepository.deleteById(id); // Ta bort post med id x
 
         return ResponseEntity.noContent().build(); // 204 No Content
     }

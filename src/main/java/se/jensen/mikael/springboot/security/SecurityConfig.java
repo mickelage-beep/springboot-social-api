@@ -7,6 +7,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -60,7 +61,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        
+
         //        /// Testar för endpoints
 //        http.authorizeHttpRequests(auth -> auth
 //                .anyRequest().permitAll() // ALLA endpoints är publika
@@ -79,7 +80,10 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"
+
                         ).permitAll()
+                        //släpper igenom Post/users så att vi kan skapa nya användare.
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -217,8 +221,8 @@ public class SecurityConfig {
                 "http://localhost:5173",
                 "http://localhost:5174",
                 "http://localhost:5175",
-                "http://localhost:3000"
-                //TODO: öppna upp för frontend på koyeb
+                "http://localhost:3000",
+                "https://colonial-henka-beeperboop-7da73dba.koyeb.app"
                 //ungefär: "https://your-frontend-domain.com"
         ));
 

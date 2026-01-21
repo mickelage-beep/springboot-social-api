@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import se.jensen.mikael.springboot.model.Post;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @OpenAPIDefinition(
         info = @Info(title = "API med JWT", version = "1.0"),

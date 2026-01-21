@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
       existsByUsernameOrEmail
       - Kontrollerar om en användare redan finns med samma username eller email
       - Returnerar true om en matchning finns
-      - Används t.ex. innan man skapar en ny användare
+      - Används t.ex. Innan man skapar en ny användare
      ============================================================
     */
     boolean existsByUsernameOrEmail(String username, String email);
@@ -43,6 +43,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
       - Returnerar Optional<User> så vi kan hantera om user inte finns
      ============================================================
     */
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.posts WHERE u.id = :id")
+    // la dit ORDER BY p.createdAt DESC för att de
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.posts p WHERE u.id = :id ORDER BY p.createdAt DESC")
     Optional<User> findUserWithPosts(Long id);
 }

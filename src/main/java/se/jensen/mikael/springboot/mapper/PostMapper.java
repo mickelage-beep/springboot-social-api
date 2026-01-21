@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
  */
 @Component
 public class PostMapper {
+    private final UserMapper userMapper;  // lägger dit Usermapper igen
+
+    public PostMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     /*
      * Konverterar en PostRequestDTO till en Post-entitet.
@@ -40,7 +45,9 @@ public class PostMapper {
         return new PostResponseDTO(
                 post.getId(),
                 post.getText(),
-                post.getCreatedAt()
+                post.getCreatedAt(),
+                userMapper.toDto(post.getUser())
         );
+
     }
 }
