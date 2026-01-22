@@ -222,7 +222,7 @@ public class SecurityConfig {
                 "http://localhost:5174",
                 "http://localhost:5175",
                 "http://localhost:3000",
-                "https://colonial-henka-beeperboop-7da73dba.koyeb.app"
+                "normal-binnie-beeperboop-77bcf5c7.koyeb.app"
                 //ungefär: "https://your-frontend-domain.com"
         ));
 
