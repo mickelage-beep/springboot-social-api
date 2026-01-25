@@ -167,3 +167,4 @@ public class UserService {
         return userWithPostsMapper.toDto(user);
     }
 }
+
