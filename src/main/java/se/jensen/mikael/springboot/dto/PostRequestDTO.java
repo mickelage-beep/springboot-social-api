@@ -3,13 +3,8 @@ package se.jensen.mikael.springboot.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/*
- * PostRequestDTO
- * - DTO för data **in** från klienten när en Post skapas eller uppdateras
- * - Validering säkerställer att textfältet är korrekt
- * - Record används för enkel, immutable data container
- * - Automatisk konstruktor
- * - Getter-metoder genereras automatiskt
+/**
+ * DTO som används när en klient skickar data för att skapa en ny post.
  */
 public record PostRequestDTO(
 

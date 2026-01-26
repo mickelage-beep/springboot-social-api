@@ -15,16 +15,12 @@ import se.jensen.mikael.springboot.repository.UserRepository;
 
 import java.util.List;
 
-/*
- ============================================================
-  UserService
- ============================================================
-
-  - Innehåller all business-logic för Users
-  - Kommunicerar med UserRepository för databasoperationer
-  - Mapperar mellan Entity och DTO
-  - Hanterar CRUD (Create, Read, Update, Delete) + speciella endpoints
-*/
+/**
+ * Service som hanterar all business-logic för Users.
+ * Kommunicerar med databasen via UserRepository, mappar
+ * mellan entity och DTO med UserMapper och UserWithPostsMapper.
+ * Hanterar CRUD-operationer samt specialmetoder för att hämta Users med deras Posts.
+ */
 @Service
 public class UserService {
 

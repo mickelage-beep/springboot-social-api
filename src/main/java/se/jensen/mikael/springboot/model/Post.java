@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 
 /*
  * Post-modellen representerar ett inlägg i systemet.
- * Detta är vår interna datamodell (backend-lager).
- *
  * Används tillsammans med JPA/Hibernate för att spara inlägg i databasen.
  */
 @Entity // Gör klassen till en JPA-entitet

@@ -10,6 +10,10 @@ public final class UserResponseDTOBuilder {
     private String bio;
     private String profileImagePath;
 
+    /**
+     * Används för att bygga ett UserResponseDTO objekt
+     * utan att behöva skicka in alla fält i konstruktorn på en gång.
+     */
     private UserResponseDTOBuilder() {
     }
 
