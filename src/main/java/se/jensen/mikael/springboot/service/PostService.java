@@ -12,14 +12,15 @@ import se.jensen.mikael.springboot.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-
+/**
+ * Service-klass som hanterar logik för inlägg (Post).
+ * Använder UserRepository för att hämta användare
+ * och PostRepository för att spara och hämta inlägg.
+ * Mapperar även User till UserResponseDTO.
+ */
 @Service
 public class PostService {
 
-    // ----------------------------
-    // Repositories för databasen
-    // ----------------------------
     private final UserRepository userRepository; // Används för att hämta User som posten ska kopplas till
     private final PostRepository postRepository; // Används för att spara och hämta Post-objekt
     private final UserMapper userMapper;         // används för att mappar User till UserDTO
@@ -31,9 +32,13 @@ public class PostService {
         this.userMapper = new UserMapper();
     }
 
-    // ----------------------------
-    // CREATE – skapa en ny Post
-    // ----------------------------
+    /**
+     * Skapar ett nytt inlägg kopplat till en användare.
+     * userId, id för användaren som äger posten
+     * postDTO, data för det nya inlägget
+     * PostResponseDTO, med sparad post och användarinformation
+     * NoSuchElementException om användaren inte finns
+     */
     public PostResponseDTO createPost(Long userId, PostRequestDTO postDTO) {
 
         Post post = new Post();

@@ -11,6 +11,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Service som ansvarar för att generera JWT-token för autentisering.
+ * Tar emot en Authentication-instans och skapar en JWT med användarens
+ * namn och roller (scope). Tokenen är giltig i 1 timme.
+ */
 @Service
 public class TokenService {
 

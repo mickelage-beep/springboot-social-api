@@ -5,12 +5,10 @@ import se.jensen.mikael.springboot.dto.UserRequestDTO;
 import se.jensen.mikael.springboot.dto.UserResponseDTO;
 import se.jensen.mikael.springboot.model.User;
 
-/*
- * UserMapper
- *
- * - Ansvarar för att konvertera mellan User-entity och DTO:er
- * - Hjälper till att separera intern modell från API-data
- * - Förhindrar att interna fält exponeras direkt via REST
+/**
+ * Ansvarar för att konvertera mellan User-entity och DTO:er
+ * Hjälper till att separera intern modell från API-data
+ * Förhindrar att interna fält exponeras direkt via REST
  */
 @Component
 public class UserMapper {
@@ -52,7 +50,4 @@ public class UserMapper {
         );
     }
 
-    // ============================================================
-    // Här kan du lägga till metoder för mappning till UserWithPostsResponseDTO
-    // ============================================================
 }

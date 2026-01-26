@@ -51,7 +51,6 @@ public class GetAllUsersTest {
 
         when(userRepository.findAll()).thenReturn(users);
 
-        //  Mocka statisk metod
         try (MockedStatic<UserMapper> mocked = org.mockito.Mockito.mockStatic(UserMapper.class)) {
             mocked.when(() -> userMapper.toDto(user)).thenReturn(dto1);
             mocked.when(() -> userMapper.toDto(user2)).thenReturn(dto2);

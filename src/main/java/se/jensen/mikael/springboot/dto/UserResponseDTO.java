@@ -1,12 +1,8 @@
 package se.jensen.mikael.springboot.dto;
 
-/*
- * UserResponseDTO
- * - DTO som används för att skicka data från servern till klienten
- * - Innehåller endast de fält som klienten behöver se
- * - Observera: password skickas **inte** tillbaka för säkerhetsskäl
- * - Record används för enkel, immutable data container
- * - Fördel: automatisk konstruktor, getters och equals/hashCode genereras
+/**
+ * DTO som används för att skicka data från servern till klienten
+ * Innehåller endast de fält som klienten behöver se
  */
 public record UserResponseDTO(
         Long id,                  // Unikt ID för användaren (från databasen)

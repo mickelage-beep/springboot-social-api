@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-/*
- * Global exception handler
- *
+/**
  * - Fångar fel från hela applikationen
  * - Returnerar strukturerade felmeddelanden istället för generiska statuskoder
  * - Exempel: 400 Bad Request med info om vilka fält som är fel, 404 Not Found etc.
@@ -20,12 +18,10 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /*
-     * Valideringsfel (t.ex. @Valid i DTO)
-     *
-     * - Fångar MethodArgumentNotValidException
-     * - Ex: textfält är tomt eller för kort
-     * - Returnerar HTTP 400 + JSON med fältnamn och felmeddelande
+    /**
+     * Fångar MethodArgumentNotValidException
+     * Ex: textfält är tomt eller för kort
+     * Returnerar HTTP 400 + JSON med fältnamn och felmeddelande
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(
@@ -46,21 +42,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    /*
+    /**
      * 404 – NOT FOUND
-     * - Fångar NoSuchElementException, ex: när en user med givet id inte finns
-     * - Returnerar HTTP 404 + felmeddelande
+     * Fångar NoSuchElementException, ex: när en user med givet id inte finns
+     * Returnerar HTTP 404 + felmeddelande
      */
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handelNoSuchElement(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    /*
+    /**
      * 400 – BAD REQUEST
-     * - Fångar IllegalArgumentException
-     * - Ex: försöker skapa user med redan befintligt username/email
-     * - Returnerar HTTP 400 + felmeddelande
+     * Fångar IllegalArgumentException
+     * Ex: försöker skapa user med redan befintligt username/email
+     * Returnerar HTTP 400 + felmeddelande
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
