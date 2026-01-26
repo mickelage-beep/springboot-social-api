@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/*
+/**
  * Controller som hanterar admin-relaterade endpoints.
  * - /admin (GET) → Returnerar en enkel textsträng som visar att det är en admin-sida
  * Notera: Säkerheten hanteras via Spring Security (t.ex. SecurityConfig) för att
@@ -16,7 +16,6 @@ public class AdminController {
 
     /**
      * GET /admin
-     * <p>
      * Exempel på enkel GET-endpoint som returnerar en textsträng.
      * Endast användare med roll ADMIN ska ha tillgång (konfigureras i SecurityConfig).
      *

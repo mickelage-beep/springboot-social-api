@@ -17,21 +17,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-/*
- * PostController
- * - Hanterar alla HTTP-anrop relaterade till Post
- * - Simulerar en enkel "databas" med List<Post>
- * - Använder PostMapper för att mappa mellan Post och DTO
- * - Returnerar ResponseEntity med korrekt HTTP-status
+/**
+ * Hanterar alla HTTP-anrop relaterade till Post
+ * Använder PostMapper för att mappa mellan Post och DTO
+ * Returnerar ResponseEntity med korrekt HTTP-status
  */
 @RestController
 @RequestMapping("/posts") // Bas-URL för alla endpoints i denna controller
 public class PostController {
-
-    /*
-     * "Låtsas-databas" – en lista med Post-objekt.
-     * Vi använder tidigare List<String> men nu med Post-modellen.
-     */
+    
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
     //ändrat till repo istället för new list
     private final PostRepository postRepository;

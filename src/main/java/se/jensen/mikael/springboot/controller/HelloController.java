@@ -2,7 +2,7 @@ package se.jensen.mikael.springboot.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-/*
+/**
  * Enkel controller som visar hur man kan skapa en REST-endpoint.
  * - /hello (GET) → Returnerar en enkel sträng
  * - /hello (POST) → Tar emot en sträng från klienten och returnerar den med ett meddelande
@@ -11,25 +11,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/hello") // Bas-URL för alla endpoints i denna controller
 public class HelloController {
 
-    /*
-     * GET /hello
+    /**
      * Exempel på enkel GET-endpoint som returnerar en statisk sträng.
      * Kan testas via webbläsare eller Postman/curl.
-     *
-     * @return sträng med hälsningsmeddelande
      */
     @GetMapping
     public String hello() {
         return "Hello from Spring Boot"; // Returnerar text direkt som response body
     }
 
-    /*
-     * POST /hello
+    /**
      * Exempel på enkel POST-endpoint som tar emot en sträng från klienten.
-     *
-     * @param message meddelandet från klienten
-     * @return meddelandet med text " received" tillagd
-     * @RequestBody binder requestens body till metoden.
      */
     @PostMapping
     public String post(@RequestBody String message) {
