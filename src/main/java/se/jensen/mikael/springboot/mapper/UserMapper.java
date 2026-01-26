@@ -18,7 +18,7 @@ public class UserMapper {
     // ============================================================
     // fromDto – skapa ny User från DTO
     // ============================================================
-    public static User fromDto(UserRequestDTO dto) {
+    public User fromDto(UserRequestDTO dto) {
         User user = new User();                 // Skapar ny User-entity
         updateUserFromDto(user, dto);    // Sätter alla värden från DTO
         return user;
@@ -27,7 +27,7 @@ public class UserMapper {
     // ============================================================
     // updateUserFromDto – uppdatera befintlig User från DTO
     // ============================================================
-    public static void updateUserFromDto(User user, UserRequestDTO dto) {
+    public void updateUserFromDto(User user, UserRequestDTO dto) {
         user.setUsername(dto.username());
         user.setEmail(dto.email());
         user.setPassword(dto.password());
@@ -40,7 +40,7 @@ public class UserMapper {
     // ============================================================
     // toDto – konvertera User till UserResponseDTO
     // ============================================================
-    public static UserResponseDTO toDto(User user) {
+    public UserResponseDTO toDto(User user) {
         return new UserResponseDTO(
                 user.getId(),
                 user.getUsername(),

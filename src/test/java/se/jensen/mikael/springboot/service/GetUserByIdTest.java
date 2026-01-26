@@ -51,7 +51,7 @@ public class GetUserByIdTest {
                 .build();
 
         try (MockedStatic<UserMapper> mockStatic = org.mockito.Mockito.mockStatic(UserMapper.class)) {
-            mockStatic.when(() -> UserMapper.toDto(user)).thenReturn(dto);
+            mockStatic.when(() -> userMapper.toDto(user)).thenReturn(dto);
             //when(userRepository.findById(1L)).thenReturn(Optional.of(user));
             //when(userMapper.toDto(user)).thenReturn(dto);
 
