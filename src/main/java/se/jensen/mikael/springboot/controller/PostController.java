@@ -108,7 +108,7 @@ public class PostController {
     // -------------------------------------------------------------------
     // PUT – uppdatera en Post
     // -------------------------------------------------------------------
-    @PutMapping("/{index}")
+    @PutMapping("/{id}")
     public ResponseEntity<PostResponseDTO> updatePost(
             @PathVariable Long id,
             @Valid @RequestBody PostRequestDTO dto

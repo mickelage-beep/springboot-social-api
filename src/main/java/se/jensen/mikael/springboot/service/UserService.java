@@ -93,7 +93,7 @@ public class UserService {
 
         // Mappa User-lista till DTO-lista
         return users.stream()
-                .map(UserMapper::toDto)
+                .map(userMapper::toDto)
                 .toList();
     }
 
@@ -129,7 +129,7 @@ public class UserService {
                         new UserNotFoundException("Ingen user i databasen med id: " + id));
 
         // Uppdatera fält baserat på DTO
-        UserMapper.updateUserFromDto(existing, dto);
+        userMapper.updateUserFromDto(existing, dto);
 
         //Hasha nytt lösenord
         existing.setPassword(passwordEncoder.encode(dto.password()));
@@ -167,3 +167,4 @@ public class UserService {
         return userWithPostsMapper.toDto(user);
     }
 }
+

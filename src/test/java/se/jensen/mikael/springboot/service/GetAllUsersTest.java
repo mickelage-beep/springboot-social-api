@@ -53,8 +53,8 @@ public class GetAllUsersTest {
 
         //  Mocka statisk metod
         try (MockedStatic<UserMapper> mocked = org.mockito.Mockito.mockStatic(UserMapper.class)) {
-            mocked.when(() -> UserMapper.toDto(user)).thenReturn(dto1);
-            mocked.when(() -> UserMapper.toDto(user2)).thenReturn(dto2);
+            mocked.when(() -> userMapper.toDto(user)).thenReturn(dto1);
+            mocked.when(() -> userMapper.toDto(user2)).thenReturn(dto2);
 
             //Funka ej eftersom metoden är statisk
 //        when(userMapper.toDto(user)).thenReturn(dto1);

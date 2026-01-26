@@ -12,6 +12,8 @@ import se.jensen.mikael.springboot.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+
 @Service
 public class PostService {
 
@@ -34,27 +36,19 @@ public class PostService {
     // ----------------------------
     public PostResponseDTO createPost(Long userId, PostRequestDTO postDTO) {
 
-        // Skapa ett nytt Post-objekt
         Post post = new Post();
 
-        // Sätt text från DTO
         post.setText(postDTO.text());
 
-        // Sätt skapandetid till nuvarande tid
         post.setCreatedAt(LocalDateTime.now());
 
-        // Hämta användare från databasen baserat på userId
-        // Om användaren inte finns kastas ett NoSuchElementException
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found with id: " + userId));
 
-        // Koppla posten till användaren
         post.setUser(user);
 
-        // Spara posten i databasen via repository
         Post savedPost = postRepository.save(post);
 
-        // Returnera en PostResponseDTO som ska skickas tillbaka till klienten
         return new PostResponseDTO(
                 savedPost.getId(),
                 savedPost.getText(),
@@ -63,3 +57,4 @@ public class PostService {
         );
     }
 }
+

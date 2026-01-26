@@ -48,7 +48,7 @@ public class GetUserByUsernameTest {
         UserResponseDTO dto = UserResponseDTOBuilder.builder().withId(1L).withUsername("Ali").build();
 
         try (MockedStatic<UserMapper> mockStatic = org.mockito.Mockito.mockStatic(UserMapper.class)) {
-            mockStatic.when(() -> UserMapper.toDto(user)).thenReturn(dto);
+            mockStatic.when(() -> usermapper.toDto(user)).thenReturn(dto);
 
             //ACT
             UserResponseDTO result = userService.getUserByUsername("Ali");
