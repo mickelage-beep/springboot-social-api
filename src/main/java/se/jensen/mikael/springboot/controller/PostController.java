@@ -13,25 +13,18 @@ import se.jensen.mikael.springboot.mapper.UserMapper;
 import se.jensen.mikael.springboot.model.Post;
 import se.jensen.mikael.springboot.repository.PostRepository;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-/*
- * PostController
- * - Hanterar alla HTTP-anrop relaterade till Post
- * - Simulerar en enkel "databas" med List<Post>
- * - Använder PostMapper för att mappa mellan Post och DTO
- * - Returnerar ResponseEntity med korrekt HTTP-status
+/**
+ * Hanterar alla HTTP-anrop relaterade till Post
+ * Använder PostMapper för att mappa mellan Post och DTO
+ * Returnerar ResponseEntity med korrekt HTTP-status
  */
 @RestController
 @RequestMapping("/posts") // Bas-URL för alla endpoints i denna controller
 public class PostController {
 
-    /*
-     * "Låtsas-databas" – en lista med Post-objekt.
-     * Vi använder tidigare List<String> men nu med Post-modellen.
-     */
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
     //ändrat till repo istället för new list
     private final PostRepository postRepository;
@@ -73,12 +66,9 @@ public class PostController {
     // -------------------------------------------------------------------
     @GetMapping
     public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
         // Konvertera alla Post → PostResponseDTO
         List<PostResponseDTO> result = posts.stream()
-                .sorted(
-                        Comparator.comparing(Post::getCreatedAt).reversed()
-                )
                 .map(p -> new PostResponseDTO(
                         p.getId(), // Skapar ett id baserat på index i listan // tog bort den så att den går direkt på ID
                         p.getText(),
@@ -114,7 +104,7 @@ public class PostController {
     // -------------------------------------------------------------------
     // PUT – uppdatera en Post
     // -------------------------------------------------------------------
-    @PutMapping("/{index}")
+    @PutMapping("/{id}")
     public ResponseEntity<PostResponseDTO> updatePost(
             @PathVariable Long id,
             @Valid @RequestBody PostRequestDTO dto

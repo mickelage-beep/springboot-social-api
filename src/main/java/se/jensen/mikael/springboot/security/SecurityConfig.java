@@ -37,36 +37,22 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
 
-/*
- ============================================================
-  SecurityConfig
- ============================================================
-
-  - Konfigurerar Spring Security för applikationen
-  - Definierar vilka endpoints som är publika, vilka som kräver admin/user
-  - Slår på Basic Auth och Form Login
-  - Hashar lösenord med BCrypt
-*/
+/**
+ * Konfigurerar säkerhet för applikationen:
+ * Hanterar JWT, CORS och kontohantering
+ * Definierar vilka endpoints som är publika och privata
+ * Skapar beans för encoder, decoder och authentication
+ */
 @EnableMethodSecurity // Aktiverar @PreAuthorize och @PostAuthorize på metoder
 @Configuration        // Spring vet att detta är en konfigurationsklass
 public class SecurityConfig {
 
-    /*
-     ============================================================
-      SecurityFilterChain Bean
-      - Här definieras alla regler för HTTP-säkerhet
-     ============================================================
-    */
+    /**
+     * Här definieras alla regler för HTTP-säkerhet
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
-
-        //        /// Testar för endpoints
-//        http.authorizeHttpRequests(auth -> auth
-//                .anyRequest().permitAll() // ALLA endpoints är publika
-//        );
-//        http.csrf(csrf -> csrf.disable());
 
 
         /// JWT
@@ -93,69 +79,23 @@ public class SecurityConfig {
                                         jwtAuthenticationConverter())));
 
 
-        // ------------------------------------------------------------
-        // Stäng av CSRF-skydd
-        // - Behövs inte för REST-API med Basic Auth
-        // ------------------------------------------------------------
-
-//        http.csrf(csrf -> csrf.disable());
-//
-//        // ------------------------------------------------------------
-//        // Authorization rules
-//        // ------------------------------------------------------------
-//
-//
-//        http.authorizeHttpRequests(auth -> auth
-//
-//                        // Alla kan skapa användare (POST /users)
-//                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-//
-//                        // Tillgång till Swagger UI och API-dokumentation utan autentisering
-//                        .requestMatchers(
-//                                "/swagger-ui/**",
-//                                "/v3/api-docs/**",
-//                                "/swagger-ui.html"
-//                        ).permitAll()
-//
-//                        // Publika endpoints under /public/** kräver ingen autentisering
-//                        .requestMatchers("/public/**").permitAll()
-//
-//                        // Endpoints under /admin/** kräver ADMIN-roll
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//
-//                        // Endpoints under /users/** kan nås av både USER och ADMIN
-//                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
-//
-//                        // Alla andra endpoints kräver autentisering
-//                        .anyRequest().authenticated()
-//                )
-//                // ------------------------------------------------------------
-//                // Autentisering med Basic Auth
-//                // ------------------------------------------------------------
-//                .httpBasic(Customizer.withDefaults())
-//
-//                // ------------------------------------------------------------
-//                // Form Login (webbformulär för login)
-//                // ------------------------------------------------------------
-//                .formLogin(Customizer.withDefaults());
-
         // Bygg och returnera SecurityFilterChain
         return http.build();
     }
 
-    /*
-     ============================================================
-      PasswordEncoder Bean
-      - Används för att hash:a lösenord vid skapande och jämförelse
-      - BCrypt är säkert och rekommenderat
-     ============================================================
-    */
+    /**
+     * Används för att hash:a lösenord vid skapande och jämförelse
+     * BCrypt är säkert och rekommenderat
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 
+    /**
+     * Skapar RSA KeyPair från Base64-strängar i .env eller properties
+     */
     @Bean
     public KeyPair keyPair(
             @Value("${JWT_PRIVATE_KEY}") String privateKey,
@@ -173,6 +113,9 @@ public class SecurityConfig {
         return new KeyPair(pubKey, privKey);
     }
 
+    /**
+     * Skapar en JWKSource som JWT-encoder använder
+     */
     @Bean
     public JWKSource<SecurityContext> jwkSource(KeyPair keyPair) {
         RSAKey rsaKey = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
@@ -183,11 +126,17 @@ public class SecurityConfig {
         return (jwkSelector, context) -> jwkSelector.select(jwkSet);
     }
 
+    /**
+     * Bean som encoder JWT med vår JWKSource
+     */
     @Bean
     public JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
         return new NimbusJwtEncoder(jwkSource);
     }
 
+    /**
+     * Bean som decoder JWT med vår publika RSA-nyckel
+     */
     @Bean
     public JwtDecoder jwtDecoder(KeyPair keyPair) {
         return NimbusJwtDecoder
@@ -195,6 +144,9 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Konverterar JWT:s scope-claim till Spring Authorities
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter converter =
@@ -207,12 +159,18 @@ public class SecurityConfig {
         return authenticationConverter;
     }
 
+    /**
+     * Bean för AuthenticationManager som används av Spring Security
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     * CORS-konfiguration så att frontenden kan kommunicera med API:et
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -222,7 +180,7 @@ public class SecurityConfig {
                 "http://localhost:5174",
                 "http://localhost:5175",
                 "http://localhost:3000",
-                "https://colonial-henka-beeperboop-7da73dba.koyeb.app"
+                "https://normal-binnie-beeperboop-77bcf5c7.koyeb.app"
                 //ungefär: "https://your-frontend-domain.com"
         ));
 

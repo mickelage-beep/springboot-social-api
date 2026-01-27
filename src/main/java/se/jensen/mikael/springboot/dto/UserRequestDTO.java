@@ -2,14 +2,9 @@ package se.jensen.mikael.springboot.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-/*
- * UserRequestDTO
- * - DTO som används när klienten skickar in data till servern
- * - Används vid POST/PUT för att skapa eller uppdatera en användare
- * - Innehåller validering (@NotBlank) för att säkerställa att viktiga fält inte är tomma
- * - Record används för enkel, immutable data container
- * - Automatisk konstruktor
- * - Getter-metoder genereras automatiskt
+/**
+ * DTO för att skapa eller uppdatera en användare.
+ * Innehåller alla fält som klienten skickar vid registrering eller uppdatering.
  */
 public record UserRequestDTO(
 

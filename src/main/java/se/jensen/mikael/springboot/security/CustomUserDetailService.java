@@ -7,15 +7,11 @@ import org.springframework.stereotype.Service;
 import se.jensen.mikael.springboot.model.User;
 import se.jensen.mikael.springboot.repository.UserRepository;
 
-/*
- ============================================================
-  CustomUserDetailService
- ============================================================
-
-  - Implementerar UserDetailsService som används av Spring Security
-  - Ansvarar för att hämta en användare från databasen vid login
-  - Wrappar User-entityn i MyUserDetails som implementerar UserDetails
-*/
+/**
+ * CustomUserDetailService används av Spring Security för autentisering.
+ * Klassen hämtar en användare från databasen baserat på användarnamn
+ * och returnerar ett UserDetails-objekt som Spring Security kan använda.
+ */
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
@@ -27,15 +23,10 @@ public class CustomUserDetailService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    /*
-     ============================================================
-      loadUserByUsername
-      - Anropas automatiskt av Spring Security vid autentisering
-      - Hämtar user via username
-      - Kastar UsernameNotFoundException om användaren inte finns
-      - Returnerar MyUserDetails som innehåller username, password och authorities
-     ============================================================
-    */
+    /**
+     * Hämtar en användare från databasen baserat på username.
+     * Anropas automatiskt av Spring Security vid login.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) {
         // Hämta user från DB

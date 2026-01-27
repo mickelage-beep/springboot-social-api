@@ -1,7 +1,5 @@
 package se.jensen.mikael.springboot.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,22 +15,14 @@ import se.jensen.mikael.springboot.repository.UserRepository;
 
 import java.util.List;
 
-/*
- ============================================================
-  UserService
- ============================================================
-
-  - Innehåller all business-logic för Users
-  - Kommunicerar med UserRepository för databasoperationer
-  - Mapperar mellan Entity och DTO
-  - Hanterar CRUD (Create, Read, Update, Delete) + speciella endpoints
-*/
+/**
+ * Service som hanterar all business-logic för Users.
+ * Kommunicerar med databasen via UserRepository, mappar
+ * mellan entity och DTO med UserMapper och UserWithPostsMapper.
+ * Hanterar CRUD-operationer samt specialmetoder för att hämta Users med deras Posts.
+ */
 @Service
 public class UserService {
-
-    // Logger
-    private static final Logger logger =
-            LoggerFactory.getLogger(UserService.class);
 
     // Repository för att läsa/spara users i databasen
     private final UserRepository userRepository;
@@ -85,9 +75,6 @@ public class UserService {
         // Spara user i DB
         User saved = userRepository.save(user);
 
-        // Logga användaren som skapas
-        logger.info("User created with username: " + saved.getUsername());
-
         // Returnera DTO för response
         return userMapper.toDto(saved);
     }
@@ -102,7 +89,7 @@ public class UserService {
 
         // Mappa User-lista till DTO-lista
         return users.stream()
-                .map(UserMapper::toDto)
+                .map(userMapper::toDto)
                 .toList();
     }
 
@@ -111,18 +98,16 @@ public class UserService {
     // -----------------------------------------------------------
     public UserResponseDTO getUser(Long id) {
 
-        // Hämta user från DB, kasta exception om den inte finns med logger.
+        // Hämta user från DB, kasta exception om den inte finns
         User user = userRepository.findById(id)
-                .orElseThrow(() ->{
-                    logger.warn("User not found with id: " + id);
-                    return new UserNotFoundException("Ingen user i databasen med id: " + id);
-                });
+                .orElseThrow(() ->
+                        new UserNotFoundException("Ingen user i databasen med id: " + id));
 
         return userMapper.toDto(user);
     }
 
     public UserResponseDTO getUserByUsername(String username) {
-        // Hämta user via username & kasta exception om den inte finns med logger.
+        // Hämta user via username
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->{
                     logger.warn("User " + username + " not found.");
@@ -130,6 +115,8 @@ public class UserService {
                 });
 
 
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found: " + username));
         return userMapper.toDto(user);
     }
 
@@ -138,24 +125,19 @@ public class UserService {
     // -----------------------------------------------------------
     public UserResponseDTO updateUser(Long id, UserRequestDTO dto) {
 
-        // Hämta user från DB, kasta exception om den inte finns med logger.
+        // Hämta user från DB, kasta exception om den inte finns
         User existing = userRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.warn("User not found with id: " + id);
-                    return new UserNotFoundException("Ingen user i databasen med id: " + id);
-                });
+                .orElseThrow(() ->
+                        new UserNotFoundException("Ingen user i databasen med id: " + id));
 
         // Uppdatera fält baserat på DTO
-        UserMapper.updateUserFromDto(existing, dto);
+        userMapper.updateUserFromDto(existing, dto);
 
         //Hasha nytt lösenord
         existing.setPassword(passwordEncoder.encode(dto.password()));
 
         // Spara ändringarna (UPDATE sker automatiskt i DB)
         User updated = userRepository.save(existing);
-
-        // Logga att användaren uppdateras vid sparande
-        logger.info("User updated with id: " + id);
 
         // Returnera DTO
         return userMapper.toDto(updated);
@@ -166,17 +148,13 @@ public class UserService {
     // -----------------------------------------------------------
     public void deleteUser(Long id) {
 
-        // Kontrollera om user finns, kasta exception med logger om user inte finns.
+        // Kontrollera om user finns, kasta exception annars
         if (!userRepository.existsById(id)) {
-            logger.warn("User not found with id: " + id);
             throw new UserNotFoundException("Ingen user i databasen med id: " + id);
         }
 
         // Radera user från DB
         userRepository.deleteById(id);
-
-        // Logga att användaren är borttagen
-        logger.info("User deleted with id: " + id);
     }
 
     // -----------------------------------------------------------
@@ -184,13 +162,11 @@ public class UserService {
     // -----------------------------------------------------------
     public UserWithPostsResponseDTO getUserWithPosts(Long id) {
 
-        // Hämta user med posts (custom query i repository), kasta exception med logger om user inte finns.
+        // Hämta user med posts (custom query i repository)
         User user = userRepository.findUserWithPosts(id)
-                .orElseThrow(() -> {
-                    logger.warn("User not found with id: " + id);
-                    return new UserNotFoundException("User not found with id: " + id);
-                });
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
         return userWithPostsMapper.toDto(user);
     }
 }
+

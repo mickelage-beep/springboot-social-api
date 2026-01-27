@@ -1,7 +1,5 @@
 package se.jensen.mikael.springboot.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.jensen.mikael.springboot.dto.PostRequestDTO;
 import se.jensen.mikael.springboot.dto.PostResponseDTO;
@@ -11,9 +9,15 @@ import se.jensen.mikael.springboot.model.User;
 import se.jensen.mikael.springboot.repository.PostRepository;
 import se.jensen.mikael.springboot.repository.UserRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.NoSuchElementException;
 
+/**
+ * Service-klass som hanterar logik för inlägg (Post).
+ * Använder UserRepository för att hämta användare
+ * och PostRepository för att spara och hämta inlägg.
+ * Mapperar även User till UserResponseDTO.
+ */
 @Service
 public class PostService {
 
@@ -36,39 +40,28 @@ public class PostService {
         this.userMapper = new UserMapper();
     }
 
-    // ----------------------------
-    // CREATE – skapa en ny Post
-    // ----------------------------
+    /**
+     * Skapar ett nytt inlägg kopplat till en användare.
+     * userId, id för användaren som äger posten
+     * postDTO, data för det nya inlägget
+     * PostResponseDTO, med sparad post och användarinformation
+     * NoSuchElementException om användaren inte finns
+     */
     public PostResponseDTO createPost(Long userId, PostRequestDTO postDTO) {
 
-        // Skapa ett nytt Post-objekt
         Post post = new Post();
 
-        // Sätt text från DTO
         post.setText(postDTO.text());
 
-        // Sätt skapandetid till nuvarande tid
-        post.setCreatedAt(LocalDateTime.now());
+        post.setCreatedAt(Instant.now());
 
-        // Hämta användare från databasen baserat på userId
-        // Om användaren inte finns kastas ett NoSuchElementException & loggar det med logger.
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    logger.warn("User not found with id: " + userId);
-                    return new NoSuchElementException("User not found with id: " + userId);
-                });
+                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + userId));
 
-
-        // Koppla posten till användaren
         post.setUser(user);
 
-        // Spara posten i databasen via repository
         Post savedPost = postRepository.save(post);
 
-        // Logga att posten skapas
-        logger.info("Post created with id: " + savedPost.getId());
-
-        // Returnera en PostResponseDTO som ska skickas tillbaka till klienten
         return new PostResponseDTO(
                 savedPost.getId(),
                 savedPost.getText(),
@@ -77,3 +70,4 @@ public class PostService {
         );
     }
 }
+

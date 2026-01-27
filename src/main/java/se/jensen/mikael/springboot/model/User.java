@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-/*
+/**
  * User-modellen representerar en användare i applikationen.
- * - Denna klass används som vår interna datamodell.
- * - DTO:er används för in/utdata i API:t.
+ * DTO:er används för in/utdata i API:t.
  */
 @Entity                         // Gör klassen till en JPA-entitet
 @Table(name = "app_user")       // Kopplar entiteten till tabellen "app_user" i databasen
@@ -38,14 +37,12 @@ public class User {
     @Column(name = "profile_image_path")                   // Får vara null
     private String profileImagePath;
 
-    /*
-     ============================================================
-      Relation till Post-entity
-      - En User kan ha många Posts
-      - mappedBy="user" anger fältet i Post som äger relationen
-      - cascade = REMOVE → radera alla posts när användaren tas bort
-     ============================================================
-    */
+    /**
+     * Relation till Post-entity
+     * En User kan ha många Posts
+     * mappedBy="user" anger fältet i Post som äger relationen
+     * cascade = REMOVE → radera alla posts när användaren tas bort
+     */
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Post> posts;
 

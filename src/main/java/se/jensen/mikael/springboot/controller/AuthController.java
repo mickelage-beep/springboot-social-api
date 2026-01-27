@@ -13,6 +13,11 @@ import se.jensen.mikael.springboot.dto.LoginResponseDTO;
 import se.jensen.mikael.springboot.security.MyUserDetails;
 import se.jensen.mikael.springboot.service.TokenService;
 
+/**
+ * Controller som ansvarar för autentisering (inloggning)
+ * Tar emot användarnamn och lösen och
+ * skapar och returnerar en JWT-token om inloggningen lyckas.
+ */
 @RestController
 @RequestMapping("/request-token")
 public class AuthController {

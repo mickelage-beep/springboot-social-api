@@ -12,11 +12,10 @@ import se.jensen.mikael.springboot.service.UserService;
 
 import java.util.List;
 
-/*
- * UserController
- * - REST-controller som hanterar alla HTTP-anrop relaterade till User
- * - Använder UserService och PostService för logik och databasinteraktion
- * - Alla endpoints returnerar ResponseEntity<T> med korrekt HTTP-status
+/**
+ * REST-controller som hanterar alla HTTP-anrop relaterade till User
+ * Använder UserService och PostService för logik och databasinteraktion
+ * Alla endpoints returnerar ResponseEntity<T> med korrekt HTTP-status
  */
 @RestController
 @RequestMapping("/users") // Bas-URL för alla endpoints i denna controller
@@ -35,12 +34,6 @@ public class UserController {
     // CREATE
     // -----------------------------------------------------------
 
-    /*
-     * Skapar en ny användare
-     * - POST /users
-     * - Validerar DTO med @Valid
-     * - Returnerar UserResponseDTO med status 201 CREATED
-     */
     @PostMapping()
     public ResponseEntity<UserResponseDTO> createUser(
             @Valid @RequestBody UserRequestDTO dto) {
@@ -50,11 +43,8 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /*
+    /**
      * Skapar en post för en specifik användare
-     * - POST /users/{userId}/posts
-     * - Validerar PostRequestDTO
-     * - Returnerar PostResponseDTO med status 201 CREATED
      */
     @PostMapping("/{userId}/posts")
     public ResponseEntity<PostResponseDTO> createPostUser(
@@ -69,12 +59,6 @@ public class UserController {
     // READ ALL
     // -----------------------------------------------------------
 
-    /*
-     * Hämtar alla användare
-     * - GET /users
-     * - Endast ADMIN får göra detta (@PreAuthorize)
-     * - Returnerar lista av UserResponseDTO med status 200 OK
-     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
@@ -88,12 +72,7 @@ public class UserController {
     // READ ONE
     // -----------------------------------------------------------
 
-    /*
-     * Hämtar en användare via id
-     * - GET /users/{id}
-     * - Endast ADMIN
-     * - Returnerar UserResponseDTO med status 200 OK
-     */
+    
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
@@ -103,10 +82,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    /*
+    /**
      * Hämtar en användare tillsammans med alla dess poster
-     * - GET /users/{id}/with-posts
-     * - Returnerar UserWithPostsResponseDTO med status 200 OK
      */
     @GetMapping("/{id}/with-posts")
     public ResponseEntity<UserWithPostsResponseDTO> getUserWithPosts(@PathVariable Long id) {
@@ -118,11 +95,10 @@ public class UserController {
     // READ ME
     // -----------------------------------------------------------
 
-    /*
+    /**
      * Hämtar info om inloggad användare
-     * - GET /users/me
-     * - Endast USER eller ADMIN kan nå denna endpoint
-     * - Hämtar användarnamn från Authentication och returnerar UserResponseDTO
+     * Endast USER eller ADMIN kan nå denna endpoint
+     * Hämtar användarnamn från Authentication och returnerar UserResponseDTO
      */
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
@@ -137,11 +113,9 @@ public class UserController {
     // UPDATE
     // -----------------------------------------------------------
 
-    /*
+    /**
      * Uppdaterar en användare
-     * - PUT /users/{id}
-     * - Tar emot UserRequestDTO via @RequestBody
-     * - Returnerar uppdaterad UserResponseDTO med status 200 OK
+     * Tar emot UserRequestDTO via @RequestBody
      */
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
@@ -157,11 +131,6 @@ public class UserController {
     // DELETE
     // -----------------------------------------------------------
 
-    /*
-     * Raderar en användare
-     * - DELETE /users/{id}
-     * - Returnerar status 204 NO CONTENT vid lyckad radering
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 
