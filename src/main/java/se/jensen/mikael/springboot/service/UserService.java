@@ -115,8 +115,7 @@ public class UserService {
                 });
 
 
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found: " + username));
+               
         return userMapper.toDto(user);
     }
 
