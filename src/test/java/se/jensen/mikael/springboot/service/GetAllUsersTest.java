@@ -52,12 +52,13 @@ public class GetAllUsersTest {
         when(userRepository.findAll()).thenReturn(users);
 
         try (MockedStatic<UserMapper> mocked = org.mockito.Mockito.mockStatic(UserMapper.class)) {
-            mocked.when(() -> userMapper.toDto(user)).thenReturn(dto1);
-            mocked.when(() -> userMapper.toDto(user2)).thenReturn(dto2);
+            //  mocked.when(() -> userMapper.toDto(user)).thenReturn(dto1);
+            // mocked.when(() -> userMapper.toDto(user2)).thenReturn(dto2);
+
 
             //Funka ej eftersom metoden är statisk
-//        when(userMapper.toDto(user)).thenReturn(dto1);
-//        when(userMapper.toDto(user2)).thenReturn(dto2);
+            when(userMapper.toDto(user)).thenReturn(dto1);
+            when(userMapper.toDto(user2)).thenReturn(dto2);
 
             //ACT
             List<UserResponseDTO> result = userService.getAllUsers();
