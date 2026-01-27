@@ -2,7 +2,7 @@ package se.jensen.mikael.springboot.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /*
  * Post-modellen representerar ett inlägg i systemet.
@@ -22,7 +22,7 @@ public class Post {
 
     // Tidsstämpel när posten skapades
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     // Many-to-One relation mot User
     // Varje post tillhör en användare
@@ -49,7 +49,7 @@ public class Post {
     }
 
     // Konstruktor som används i mapper / test
-    public Post(Long id, String text, LocalDateTime createdAt) {
+    public Post(Long id, String text, Instant createdAt) {
         this.id = id;
         this.text = text;
         this.createdAt = createdAt;
@@ -75,11 +75,11 @@ public class Post {
         this.text = text;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 }

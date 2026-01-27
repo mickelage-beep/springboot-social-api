@@ -3,6 +3,8 @@ package se.jensen.mikael.springboot.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import se.jensen.mikael.springboot.model.Post;
 
+import java.util.List;
+
 /**
  * Repository-gränssnitt för Post-entiteten.
  * Ärver från JpaRepository<Post, Long> vilket ger oss:
@@ -14,4 +16,6 @@ import se.jensen.mikael.springboot.model.Post;
  */
 public interface PostRepository extends JpaRepository<Post, Long> {
     // Här kan man senare lägga till egna query-metoder om det behövs
+
+    List<Post> findAllByOrderByCreatedAtDesc();
 }

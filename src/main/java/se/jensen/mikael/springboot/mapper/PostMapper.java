@@ -5,7 +5,7 @@ import se.jensen.mikael.springboot.dto.PostRequestDTO;
 import se.jensen.mikael.springboot.dto.PostResponseDTO;
 import se.jensen.mikael.springboot.model.Post;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Mapper som konverterar mellan Post och DTO-klasserna.
@@ -26,7 +26,7 @@ public class PostMapper {
         Post post = new Post();
         post.setId(0L); // Id används temporärt (kan bytas mot auto-genererad id i DB)
         post.setText(dto.text()); // Sätter text från DTO
-        post.setCreatedAt(LocalDateTime.now()); // Sätter aktuell tid
+        post.setCreatedAt(Instant.now()); // Sätter aktuell tid
         return post;
     }
 

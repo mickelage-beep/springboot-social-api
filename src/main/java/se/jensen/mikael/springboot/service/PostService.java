@@ -9,7 +9,7 @@ import se.jensen.mikael.springboot.model.User;
 import se.jensen.mikael.springboot.repository.PostRepository;
 import se.jensen.mikael.springboot.repository.UserRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.NoSuchElementException;
 
 /**
@@ -45,7 +45,7 @@ public class PostService {
 
         post.setText(postDTO.text());
 
-        post.setCreatedAt(LocalDateTime.now());
+        post.setCreatedAt(Instant.now());
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found with id: " + userId));

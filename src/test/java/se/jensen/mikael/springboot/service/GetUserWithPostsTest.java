@@ -16,7 +16,7 @@ import se.jensen.mikael.springboot.model.Post;
 import se.jensen.mikael.springboot.model.User;
 import se.jensen.mikael.springboot.repository.UserRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,13 +56,13 @@ public class GetUserWithPostsTest {
         Post post1 = new Post();
         post1.setId(100L);
         post1.setText("Post 1");
-        post1.setCreatedAt(LocalDateTime.now());
+        post1.setCreatedAt(Instant.now());
         post1.setUser(user);
 
         Post post2 = new Post();
         post2.setId(101L);
         post2.setText("Post 2");
-        post2.setCreatedAt(LocalDateTime.now());
+        post2.setCreatedAt(Instant.now());
         post2.setUser(user);
 
         // DTO-versioner
