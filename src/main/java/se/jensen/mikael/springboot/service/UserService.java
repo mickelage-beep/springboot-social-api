@@ -129,6 +129,7 @@ public class UserService {
                     return new UsernameNotFoundException("User " + username + " hittades ej.");
                 });
 
+
         return userMapper.toDto(user);
     }
 
